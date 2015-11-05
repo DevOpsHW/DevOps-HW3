@@ -4,8 +4,8 @@ var redis = require('redis')
 var exec = require('child_process').exec;
 var request = require("request");
 var client = redis.createClient(6379, '127.0.0.1', {})
-var instance1 = 'http://127.0.0.1:5060';
-var instance2  = 'http://127.0.0.1:9090';
+var instance1 = 'http://127.0.0.1:3000';
+var instance2  = 'http://127.0.0.1:3001';
 
 // var TARGET = BLUE;
 
@@ -16,6 +16,7 @@ var infrastructure =
     // Proxy.
     client.lpush('servers', instance1);
     client.lpush('servers', instance2);
+    client.ltrim('servers', 0, 1);
     var options = {};
     var proxy   = httpProxy.createProxyServer(options);
 
@@ -31,7 +32,7 @@ var infrastructure =
     server.listen(8080);
 
     // Launch green slice
-    exec('forever start --watch main.js 9090', function(err, out, code) 
+    exec('forever start --watch main.js 3000', function(err, out, code) 
     {
       console.log("attempting to launch instance1");
       if (err instanceof Error)
@@ -43,7 +44,7 @@ var infrastructure =
     });
 
     // Launch blue slice
-    exec('forever start --watch main2.js 5060', function(err, out, code) 
+    exec('forever start --watch main2.js 3001', function(err, out, code) 
     {
       console.log("attempting to launch instance2");
       if (err instanceof Error)
