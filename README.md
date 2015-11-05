@@ -2,6 +2,9 @@ DevOps HW3 - Proxies, Queues, Cache Fluency.
 =========================
 Based on [Workshop: Queues, Caches, Proxies](https://github.com/CSC-DevOps/Queues) and [Workshop: Deployment](https://github.com/CSC-DevOps/Deployment)
 
+###Demo
+[video](https://drive.google.com/file/d/0B87f7178bIHnNDF6NFVHeEZ6M0k/view?usp=sharing)
+
 ### Setup
 
 * Clone this repo, run `npm install`.
