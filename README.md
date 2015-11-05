@@ -14,4 +14,4 @@ Run server instances by command
 
 	node proxy.js
 	
-It will launch two servers from `main.js` and `main2.js`, on port `9090` and `5060`, and start a proxy server listen on port `8080`
+It will launch two servers from `main.js` and `main2.js`, on port `3000` and `3001`, and start a proxy server listen on port `8080`
