@@ -5,7 +5,11 @@ var fs      = require('fs')
 var app = express()
 // REDIS
 var client = redis.createClient(6379, '127.0.0.1', {})
-var server = app.listen(3000, function () {
+
+var args = process.argv.slice(2);
+var PORT = args[0];
+
+var server = app.listen(PORT, function () {
   var host = server.address().address;
   var port = server.address().port;
   console.log('Example app listening at http://%s:%s', host, port);
@@ -30,10 +34,13 @@ app.use( function (req, res, next)
 	next(); // Passing the request to the next handler in the stack.
 });
 
+app.get('/', function (req, res){
+	res.send('home page for instance 1');
+});
 
 app.get('/recent', function (req, res){
 	client.lrange('recent', 0, 4, function (err, reply){
-		res.send(reply.join(',\r\n\n'));
+		res.send( 'Instance 1 \n <br>' + reply.join(',<br>'));
 		// for(var i = 0 ; i < reply.length; i++)
 		// {
 		// 	res.send(reply[i]);
@@ -43,8 +50,8 @@ app.get('/recent', function (req, res){
 
 app.get('/set', function (req, res) {
   client.set("key", "this message will self-destruct in 10 seconds");
-  
   client.expire("key", 10)
+  res.end();
 });
 
 app.get('/get', function (req, res){
@@ -92,20 +99,11 @@ app.get('/meow', function(req, res) {
 			console.log(len);
 		});
 		// console.log(len);
-		client.lrange('meow', 0, 10, function(err, reply){
-			if (err) throw err
-			// console.log(reply);
-			reply.forEach(function (imagedata) 
-			{
-				// console.log(imagedata);
-   				res.write("<h1>\n<img src='data:my_pic.jpg;base64,"+imagedata+"'/>");
-   				// res.send("hahahahahah");
-
-			});
+		client.lpop('meow', function (err, reply){
+			if (err) throw err;
+			res.write("<h1>\n<img src='data:my_pic.jpg;base64,"+reply+"'/>");
 			res.end();
 		});
-		
-		client.ltrim('meow', 1, 2);
    		
 	}
 })
